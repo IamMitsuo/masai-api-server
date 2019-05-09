@@ -1,0 +1,76 @@
+version: '3.1'
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_DB: masai_db
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - ./mongodb/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
+
+  mongo-seed:
+    image: mongo
+    links:
+      - mongo
+    environment:
+      - MONGODB_HOST=mongo
+      - MONGODB_PORT=27017
+    volumes:
+      - ./mongodb/data:/data
+    command:
+      /data/import.sh
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+
+  # postgres:
+  #   image: "postgres:latest"
+  #   restart: always
+  #   volumes:
+  #     - /Postgres_data/var/lib/postgresql:/var/lib/postgresql
+  #   environment:
+  #     - PSOTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=password
+  #     - POSTGRES_DB=mobsf
+  mobsf:
+    build:
+      context: ./Mobile-Security-Framework-MobSF
+      dockerfile: Dockerfile
+      args:
+       - POSTGRES=False
+    volumes:
+      - /MobSF_data:/root/.MobSF
+    environment:
+      - MOBSF_API_KEY=c68807d7667cfaf720f900702d3600bfc72ea9c586bb22a5df43f4ab32baac6f
+    ports:
+      - "8000:8000"
+  flask:
+    image: webapp-flask
+    build:
+      context: ./flask-server
+      dockerfile: Dockerfile-flask
+    volumes:
+      - "./flask-server/:/app"
+    depends_on:
+      - mobsf
+      - mongo
+  nginx:
+    image: webapp-nginx
+    build:
+      context: ./flask-server
+      dockerfile: Dockerfile-nginx
+    ports:
+      - 5000:80
+    depends_on:
+      - flask

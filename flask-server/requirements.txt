@@ -1,0 +1,9 @@
+Flask==1.0.2
+Flask-Login==0.2.11
+Flask-PyMongo==2.2.0
+uWSGI==2.0.17.1
+gpapi==0.4.3
+requests==2.19.1
+requests-futures==0.9.7
+requests-toolbelt==0.8.0
+reportlab==3.5.13

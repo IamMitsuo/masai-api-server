@@ -1,0 +1,20 @@
+FROM python:3.6.5
+
+ENV APP /app
+ENV DOWNLOAD_TEMP_DIR /app/temp/
+ENV PDF_REPORT_TEMP_DIRECTORY /app/pdfreport/
+ENV LOGO_PATH /app/image/logo.png
+ENV TABLE_PATH /app/image/table.jpg
+
+RUN mkdir $APP
+WORKDIR $APP
+
+EXPOSE 5000
+
+COPY requirements.txt .
+
+RUN pip install -r requirements.txt
+
+COPY . .
+
+CMD [ "uwsgi", "--ini", "app.ini"]
