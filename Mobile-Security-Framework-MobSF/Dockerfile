@@ -84,7 +84,7 @@ RUN cd scripts && chmod +x postgres_support.sh; sync; ./postgres_support.sh $POS
 RUN git clone --recursive ${YARA_URL} yara-python && \
     cd yara-python && \
     python3 setup.py build --enable-dex install && \
-    pip3 install apkid && \
+    pip3 install apkid==1.2.1 && \
     cd .. && \
     rm -fr yara-python && \
     sed -i 's/APKID_ENABLED.*/APKID_ENABLED = True/' /root/Mobile-Security-Framework-MobSF/MobSF/settings.py
