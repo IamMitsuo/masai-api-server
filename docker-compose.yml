@@ -13,26 +13,26 @@ services:
     volumes:
       - ./mongodb/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
 
-  mongo-seed:
-    image: mongo
-    links:
-      - mongo
-    environment:
-      - MONGODB_HOST=mongo
-      - MONGODB_PORT=27017
-    volumes:
-      - ./mongodb/data:/data
-    command:
-      /data/import.sh
+  # mongo-seed:
+  #   image: mongo
+  #   links:
+  #     - mongo
+  #   environment:
+  #     - MONGODB_HOST=mongo
+  #     - MONGODB_PORT=27017
+  #   volumes:
+  #     - ./mongodb/data:/data
+  #   command:
+  #     /data/import.sh
 
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+  # mongo-express:
+  #   image: mongo-express
+  #   restart: always
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: root
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: example
 
   # postgres:
   #   image: "postgres:latest"
@@ -59,18 +59,21 @@ services:
     image: webapp-flask
     build:
       context: ./flask-server
-      dockerfile: Dockerfile-flask
+      # dockerfile: Dockerfile-flask
     volumes:
       - "./flask-server/:/app"
+    ports:
+      - "5000:5000"
     depends_on:
       - mobsf
       - mongo
-  nginx:
-    image: webapp-nginx
-    build:
-      context: ./flask-server
-      dockerfile: Dockerfile-nginx
-    ports:
-      - 5000:80
-    depends_on:
-      - flask
+  # nginx:
+  #   image: webapp-nginx
+  #   restart: always
+  #   build:
+  #     context: ./masai-server/nginx
+  #     # dockerfile: Dockerfile-nginx
+  #   ports:
+  #     - 5000:80
+  #   depends_on:
+  #     - flask

@@ -10,7 +10,8 @@ from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from gpapi.googleplay import GooglePlayAPI, RequestError
 from requests_toolbelt.multipart.encoder import MultipartEncoder
-import report as reportgen
+
+import app.report as reportgen
 
 MOBSF_API_KEY = 'c68807d7667cfaf720f900702d3600bfc72ea9c586bb22a5df43f4ab32baac6f'
 MOBSF_URL = 'http://mobsf:8000/api/v1'
