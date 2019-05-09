@@ -255,15 +255,13 @@ def test_app(file_directory):
                 'averageCvss': average_cvss,
                 'appNormalDetail': play_details,
                 'status': 'finish'}
+    # with open(file_directory + '.json', 'w') as json_output:
+    #     json.dump(scan_response, json_output, indent=4)
+    #     json_output.close()
 
-    with open(file_directory + '.json', 'w') as json_output:
-        json.dump(scan_response, json_output, indent=4)
-        json_output.close()
-
-    with open(file_directory + '_modified.json', 'w') as json_output:
-        json.dump(details, json_output, indent=4)
-        json_output.close()
-    
+    # with open(file_directory + '_modified.json', 'w') as json_output:
+    #     json.dump(details, json_output, indent=4)
+    #     json_output.close()
     mongo.db['test'].update_one({'packageName':package_name,
                                     'versionCode': version_code},
                                         {'$set': details}, upsert=True)
